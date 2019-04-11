@@ -21,13 +21,13 @@ int triggerL = 13;
 #define LEFT 3
 #define RIGHT 2
 #define STRAIGHT 1
-#define OBSTACLE_CLOSE 10  // Determines how close to a wall the robot must get before turning. May be adjusted
-#define WAIT_TIME 290           // Time between commands.
-#define STRAIGHT_TIME 800      // How long to go straight. Will need to be calibrated for each team
-#define LEFT_TURN_TIME 455      // How long to turn 90 degrees. Will need to be calibrated for each team
-#define RIGHT_TURN_TIME 300     // How long to turn 90 degrees. Will need to be calibrated for each team
-#define LEFT_SPEED 150
-#define RIGHT_SPEED 240
+#define OBSTACLE_CLOSE 12       // Determines how close to a wall the robot must get before turning. May be adjusted
+#define WAIT_TIME 290           // Pause Time.
+#define STRAIGHT_TIME 800       // How long to go straight
+#define LEFT_TURN_TIME 2      // How long for left turn
+#define RIGHT_TURN_TIME 238     // How long for right turn
+#define LEFT_SPEED 140
+#define RIGHT_SPEED 230
 
 // Initialize variables
 float straightDistance = 0, rightDistance = 0, leftDistance = 0;
@@ -54,21 +54,19 @@ void setup() {
 void loop() {
   GoStraight();
   
-  //RightTurn90(); //TEST THIS TURN
+  //RightTurn90(); //TEST FOR TILE
+  //LeftTurn90();  //TEST FOR TILE
   
-  LeftTurn90(); //LEFT TURN IS GOOD!
-  
-  
-  /*
+  //LeftTurn90(); //FOR 180 TURN IS GOOD!
+  //LeftTurn90();
   
   straightDistance = GetDistance(STRAIGHT);
   rightDistance = GetDistance(RIGHT);
   leftDistance = GetDistance(LEFT);
-
   if (straightDistance < OBSTACLE_CLOSE) {
-    if (leftDistance < OBSTACLE_CLOSE && rightDistance < OBSTACLE_CLOSE) {
-      LeftTurn90();
-      LeftTurn90();
+    if (leftDistance < OBSTACLE_CLOSE && rightDistance < OBSTACLE_CLOSE) { // IF DEAD END
+      RightTurn90();
+      RightTurn90();
     }
     else if (leftDistance > rightDistance) {
       LeftTurn90();
@@ -77,8 +75,6 @@ void loop() {
       RightTurn90();
     }
   }
-  */
-  
   
   
 }
