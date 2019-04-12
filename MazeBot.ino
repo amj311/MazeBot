@@ -18,16 +18,18 @@ int echoL = 12;
 int triggerL = 13;
 
 // Constants
+int OBSTACLE_CLOSE = -1;  // Determines how close to a wall the robot must get before turning. May be adjusted
+int T_BONE = 30;  // Determines how far left and rught should be to consider open paths.
 #define LEFT 3
 #define RIGHT 2
 #define STRAIGHT 1
-#define OBSTACLE_CLOSE 12       // Determines how close to a wall the robot must get before turning. May be adjusted
-#define WAIT_TIME 290           // Pause Time.
-#define STRAIGHT_TIME 800       // How long to go straight
-#define LEFT_TURN_TIME 2      // How long for left turn
-#define RIGHT_TURN_TIME 238     // How long for right turn
-#define LEFT_SPEED 140
-#define RIGHT_SPEED 230
+#define WAIT_TIME 500           // Time between commands.
+#define STRAIGHT_TIME 00        // How long to go straight
+#define BACK_TIME 50        // How long to go back
+#define LEFT_TURN_TIME  270     // How long for left turn
+#define RIGHT_TURN_TIME 230     // How long for right turn
+#define LEFT_SPEED 145
+#define RIGHT_SPEED 237
 
 // Initialize variables
 float straightDistance = 0, rightDistance = 0, leftDistance = 0;
@@ -52,21 +54,31 @@ void setup() {
 
 // Will work, but doesn't actually guarantee a solved maze as it is right now
 void loop() {
+  /*while (GetDistance(STRAIGHT) > OBSTACLE_CLOSE) {
+    GoStraight();
+  } 
+  
   GoStraight();
+  RightTurn90();
+  RightTurn90();
+  */
   
-  //RightTurn90(); //TEST FOR TILE
-  //LeftTurn90();  //TEST FOR TILE
-  
-  //LeftTurn90(); //FOR 180 TURN IS GOOD!
-  //LeftTurn90();
-  
+
   straightDistance = GetDistance(STRAIGHT);
   rightDistance = GetDistance(RIGHT);
   leftDistance = GetDistance(LEFT);
-  if (straightDistance < OBSTACLE_CLOSE) {
-    if (leftDistance < OBSTACLE_CLOSE && rightDistance < OBSTACLE_CLOSE) { // IF DEAD END
-      RightTurn90();
-      RightTurn90();
+  
+  GoStraight();
+  
+  if (straightDistance < OBSTACLE_CLOSE){
+    RollBack();
+    if (leftDistance < OBSTACLE_CLOSE && rightDistance < OBSTACLE_CLOSE) {
+      LeftTurn90();
+      LeftTurn90();
+    }
+    else if (leftDistance > T_BONE && rightDistance > T_BONE)
+    {
+      LeftTurn90();
     }
     else if (leftDistance > rightDistance) {
       LeftTurn90();
@@ -77,6 +89,7 @@ void loop() {
   }
   
   
+  OBSTACLE_CLOSE = 10;
 }
 
 void GoStraight() {
@@ -91,10 +104,24 @@ void GoStraight() {
 
   
   //For testing
-  delay(STRAIGHT_TIME);
+  //delay(STRAIGHT_TIME);
 
-  
+  return;
+}
+void RollBack() {
+  Pause();
+  // Sets all wheels to backward     -    these may need to be changed
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
+    digitalWrite(in3, LOW);
+    digitalWrite(in4, HIGH);
+    analogWrite(ena, LEFT_SPEED);
+    analogWrite(enb, RIGHT_SPEED);
 
+    delay(BACK_TIME);
+
+    Pause();
+    
   return;
 }
 
